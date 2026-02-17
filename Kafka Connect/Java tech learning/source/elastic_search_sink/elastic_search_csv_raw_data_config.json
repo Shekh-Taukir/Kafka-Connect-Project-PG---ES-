@@ -1,0 +1,30 @@
+{
+  "name": "es_con_csv_2_data_v1",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "tasks.max": "1",
+    "topics": "kt_csv_2_data_enrch",
+    "index": "es_idx_dept_2_data",
+
+    "schema.ignore": "true",
+
+    "connection.url": "http://192.168.0.4:9200",
+
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.ignore": "true",
+
+    "behavior.on.malformed.documents": "warn",
+    "behavior.on.null.values": "IGNORE",
+
+    "auto.create.indices.at.start": "false",
+    "auto.offset.reset": "earliest",
+
+    "drop.invalid.message": "true",
+    "batch.size": "1",
+
+    "errors.log.enable": "true"
+  }
+}

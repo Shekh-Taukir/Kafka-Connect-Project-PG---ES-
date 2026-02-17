@@ -9,34 +9,29 @@
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "key.converter": "org.apache.kafka.connect.json.JsonConverter",
 
+    "_comment-transforms": "createKey,2setSchema",
     "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
     "transforms.createKey.fields": "department_id,department_name",
+    "_comment-transforms.setSchema.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+    "_comment-transforms.setSchema.schema.name": "DepartmentTransferRecords",
 
     "connection.url": "jdbc:postgresql://172.20.128.1:5432/postgres",
     "connection.user": "postgres",
     "connection.password": "admin",
-
     "dialect.name": "PostgreSqlDatabaseDialect",
+
     "mode": "incrementing",
     "incrementing.column.name": "department_id",
 
     "numeric.precision.mapping": true,
     "numeric.mapping": "best_fit",
-    "query": "SELECT *, department_name || ' - new' as new_column1, 'data from department table' as new_column2 FROM DEPARTMENTS",
 
+    "query": "SELECT *, department_name || ' - new' as new_column1, 'data from department table' as new_column2 FROM DEPARTMENTS",
     "table.type": "TABLE",
+
     "poll.interval.ms": "5000",
     "batch.max.rows": "5",
     "topic.prefix": "department-transfer-data-v1",
-    "db.timezone": "Asia/Kuala_Lumpur",
-
-    "_comment-key.converter": "io.confluent.connect.avro.AvroConverter",
-    "_comment-key.converter.schema.registry.url": "http://localhost:8081/",
-    "_comment-value.converter.schema.registry.url": "http://localhost:8081/",
-    "_comment-value.converter": "io.confluent.connect.avro.AvroConverter",
-    "_comment-transforms.setSchema.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
-    "_comment-transforms.setSchema.schema.name": "DepartmentTransferRecords",
-    "_comment-transforms": "createKey,setSchema",
-    "_comment-table.whitelist": "DEPARTMENTS"
+    "db.timezone": "Asia/Kuala_Lumpur"
   }
 }

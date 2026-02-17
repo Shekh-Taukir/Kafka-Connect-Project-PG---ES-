@@ -1,0 +1,30 @@
+{
+  "name": "elastic_search-sink-2-v2",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "tasks.max": "1",
+    "topics": "st_dept_enriched",
+    "index": "st_csv_dept_enriched_2",
+
+    "topic.index.map": "st_dept_enriched:st_csv_dept_enriched_2",
+
+    "schema.ignore": "true",
+    "write.method": "insert",
+
+    "connection.url": "http://192.168.0.4:9200",
+
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "key.ignore": "true",
+    "consumer.override.auto.offset.reset": "earliest",
+
+    "behavior.on.malformed.documents": "warn",
+
+    "auto.create.indices.at.start": "true",
+    "auto.offset.reset": "earliest",
+
+    "batch.size": "1",
+
+    "errors.log.enable": "true"
+  }
+}

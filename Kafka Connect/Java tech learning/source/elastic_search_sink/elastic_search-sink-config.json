@@ -3,36 +3,29 @@
   "config": {
     "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
     "tasks.max": "1",
-    "topics": "ST_DEPT_ENRICHED",
+    "topics": "st_dept_enriched",
 
     "schema.ignore": "true",
-    "connection.url": "http://192.168.0.10:9200",
-
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "value.converter.schemas.enable": "false",
-    "key.ignore": "true",
-
-    "behavior.on.malformed.documents": "warn",
-    "auto.offset.reset": "earliest",
-
-    "batch.size": "1",
-    "errors.log.enable": "true",
-
-    "_comment-type.name": "_doc",
     "_comment-behavior.on.null.values": "ignore",
     "_comment-write.method": "insert",
 
+    "connection.url": "http://192.168.0.4:9200",
     "_comment-connection.username": "elastic",
     "_comment-connection.password": "zeeshan",
 
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
     "_comment-key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.ignore": "true",
 
     "_comment-validate.indices.exists": "false",
-    "_comment-use.data.stream": "false",
+    "-comment-use.data.stream": "false",
+    "behavior.on.malformed.documents": "warn",
 
-    "_comment-auto.create.indices.at.start": "true",
+    "auto.create.indices.at.start": "false",
     "_comment-connection.timeout.ms": "10000",
     "_comment-read.timeout.ms": "10000",
+    "auto.offset.reset": "earliest",
 
     "_comment-elastic.security.protocol": "SSL",
     "_comment-elastic.https.ssl.truststore.location": "",
@@ -41,6 +34,10 @@
     "_comment-transforms": "lowercaseIndex",
     "_comment-transforms.lowercaseIndex.type": "org.apache.kafka.connect.transforms.RegexRouter",
     "_comment-transforms.lowercaseIndex.replacement": "st_dept_enriched",
-    "_comment-transforms.lowercaseIndex.regex": ".*"
+    "_comment-transforms.lowercaseIndex.regex": ".*",
+
+    "batch.size": "1",
+
+    "errors.log.enable": "true"
   }
 }

@@ -1,0 +1,55 @@
+{
+  "name": "spooler-dir-csv-v1",
+  "config": {
+    "tasks.max": "1",
+    "connector.class": "com.github.jcustenborder.kafka.connect.spooldir.SpoolDirCsvSourceConnector",
+
+    "input.path": "/mnt/d/kafka_spooldir_folder/raw_files/",
+    "finished.path": "/mnt/d/kafka_spooldir_folder/processed_files/",
+    "error.path": "/mnt/d/kafka_spooldir_folder/error_files/",
+    "input.file.pattern": "^.*\\.csv$",
+
+    "halt.on.error": "false",
+    "csv.first.row.as.header": "true",
+    "schema.generation.enabled": "false",
+
+    "topic": "csv_raw_data",
+
+    "value.schema": "{
+        \"type\": \"STRUCT\",
+        \"name\": \"Transaction\",
+        \"fieldSchemas\": {
+            \"tran_id\":    {\"type\": \"STRING\"},
+            \"first_name\": {\"type\": \"STRING\"},
+            \"last_name\":  {\"type\": \"STRING\"},
+            \"email\":      {\"type\": \"STRING\"},
+            \"age\":        {\"type\": \"STRING\"},
+            \"city\":       {\"type\": \"STRING\"},
+            \"created_at\": {\"type\": \"STRING\"}
+        }
+    }",
+    "key.schema": "{\"type\":\"STRUCT\",\"isOptional\":true, \"fieldSchemas\":{}}",
+
+    "value.converter.schema.registry.url": "http://localhost:8081",
+    "value.converter.schemas.enable": "false",
+    "value.converter.latest.compatibility.strict": "false",
+
+    "value.converter.auto.register.schemas": "false",
+    "value.converter.use.latest.version": "true",
+
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+
+    "transforms": "createKey",
+    "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "transforms.createKey.fields": "tran_id",
+
+    "timestamp.mode":"FILE_TIME",
+
+    "csv.case.sensitive.field.names": "false",
+    "trim.column.names": "true",
+
+    "_comment-key.ignore": "true",
+    "_comment-behavior.on.malformed.documents": "warn"
+  }
+}

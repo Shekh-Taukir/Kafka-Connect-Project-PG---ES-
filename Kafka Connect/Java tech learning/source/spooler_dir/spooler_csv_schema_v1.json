@@ -1,0 +1,28 @@
+{
+  "title": "Spooler_csv_data_schema_v1",
+  "type": "object",
+  "properties": {
+    "tran_id": {
+      "type": "integer"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "age": {
+      "type": "integer"
+    },
+    "city": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    }
+  },
+  "required": ["tran_id"]
+}
