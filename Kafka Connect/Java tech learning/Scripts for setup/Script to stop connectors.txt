@@ -1,0 +1,19 @@
+===================Source Connectors===================
+
+--To stop JDBC connector
+curl -X DELETE http://localhost:8083/connectors/deparments-transfer-data-jdbc-source-connector-v1
+
+--to stop Spooler Dir connector
+curl -X DELETE http://localhost:8083/connectors/spooler-dir-csv-v1
+
+
+===================Sink Connectors===================
+
+--to stop st_dept_enriched elastic search connector
+curl -X DELETE http://localhost:8083/connectors/elastic_search-sink-v1
+
+--to stop csv_2_data elastic search connector
+curl -X DELETE http://localhost:8083/connectors/es_con_csv_2_data_v1
+
+--to stop elastic search dept_2_data
+curl -X DELETE http://localhost:8083/connectors/es_con_dept_2_data_v1

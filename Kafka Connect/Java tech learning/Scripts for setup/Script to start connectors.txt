@@ -1,0 +1,19 @@
+===================Source Connectors===================
+
+--To start JDBC connector
+curl -X POST -H "Content-Type: application/json" --data @data_transfer_config.json http://localhost:8083/connectors
+
+--to start Spooler Dir connector
+curl -X POST -H "Content-Type: application/json" --data @spooler_config_v1.json http://localhost:8083/connectors
+
+
+===================Sink Connectors===================
+
+--to start st_dept_enriched elastic search connector
+curl -X POST -H "Content-Type: application/json" --data @elastic_search-sink-config.json http://localhost:8083/connectors
+
+--to start csv_2_data elastic search connector
+curl -X POST -H "Content-Type: application/json" --data @elastic_search_csv_raw_data_config.json http://localhost:8083/connectors
+
+--to start elastic search dept_2_data
+curl -X POST -H "Content-Type: application/json" --data @es_dept_2_data_config.json http://localhost:8083/connectors
