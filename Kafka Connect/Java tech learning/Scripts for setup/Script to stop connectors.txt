@@ -17,3 +17,7 @@ curl -X DELETE http://localhost:8083/connectors/es_con_csv_2_data_v1
 
 --to stop elastic search dept_2_data
 curl -X DELETE http://localhost:8083/connectors/es_con_dept_2_data_v1
+
+
+--to stop jdbc sink topic to postgres table
+curl -X DELETE http://localhost:8083/connectors/jdbc_sink_connector_data_2_dept_new_v1

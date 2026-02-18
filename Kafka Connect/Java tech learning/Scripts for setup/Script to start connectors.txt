@@ -17,3 +17,6 @@ curl -X POST -H "Content-Type: application/json" --data @elastic_search_csv_raw_
 
 --to start elastic search dept_2_data
 curl -X POST -H "Content-Type: application/json" --data @es_dept_2_data_config.json http://localhost:8083/connectors
+
+--to start JDBC enriched topic to postgres table
+curl -X POST -H "Content-Type: application/json" --data @jdbc_sink_data_2_dept_new.json http://localhost:8083/connectors

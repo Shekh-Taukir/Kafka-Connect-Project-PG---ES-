@@ -69,6 +69,46 @@ FROM
 SELECT * FROM st_csv_2_data_enriched EMIT CHANGES;
 
 
+========================================For JDBC Sink connector
+
+--need to create another stream for st_dept_enriched, because kafka topics have plain json, but jdbc sink connector, requires a schema in the msg
+ksql>
+CREATE STREAM st_dept_data_2_db_jdbc_snk (
+    DEPARTMENT_ID INT,
+    DEPARTMENT_NAME STRING,
+    CHANGED_DATE STRING,
+    NEW_COLUMN1 STRING,
+    NEW_COLUMN2 STRING,
+    COMPANY_NAME STRING,
+    PROCESSED_AT STRING
+) WITH (
+    KAFKA_TOPIC='st_dept_enriched',
+    VALUE_FORMAT='JSON'
+);
+
+--this creates a topic in kafka, with schema in the messages
+ksql>
+CREATE STREAM st_dept_data_2_db_for_sink_topic
+WITH (
+    KAFKA_TOPIC = 'st_dept_data_2_db_for_sink_topic',
+    VALUE_FORMAT='JSON_SR',
+    PARTITIONS=1
+) AS 
+SELECT 
+    DEPARTMENT_ID AS "dept_id", 
+    DEPARTMENT_NAME AS "dept_name", 
+    CHANGED_DATE AS "changed_at", 
+    NEW_COLUMN1 AS "col1", 
+    NEW_COLUMN2 AS "col2", 
+    COMPANY_NAME AS "company", 
+    FORMAT_TIMESTAMP(FROM_UNIXTIME(UNIX_TIMESTAMP(PROCESSED_AT, 'yyyy-MM-dd HH:mm:ss')), 'yyyy-MM-dd HH:mm:ss') AS "processed_at"
+FROM 
+    st_dept_data_2_db_jdbc_snk;
+
+--to see the changes live in the csv_data enriched stream
+SELECT * FROM st_dept_data_2_db_for_sink_topic EMIT CHANGES;
+
+
 ======================================testing for ES
 
 ksql>
