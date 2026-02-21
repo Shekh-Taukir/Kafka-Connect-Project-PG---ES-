@@ -6,6 +6,9 @@ curl -X POST -H "Content-Type: application/json" --data @data_transfer_config.js
 --to start Spooler Dir connector
 curl -X POST -H "Content-Type: application/json" --data @spooler_config_v1.json http://localhost:8083/connectors
 
+--to start Debezium connector
+curl -X POST -H "Content-Type: application/json" --data @source/conn_dbz_postgres_2_data_policy_v1.json http://localhost:8083/connectors
+
 
 ===================Sink Connectors===================
 
@@ -18,5 +21,13 @@ curl -X POST -H "Content-Type: application/json" --data @elastic_search_csv_raw_
 --to start elastic search dept_2_data
 curl -X POST -H "Content-Type: application/json" --data @es_dept_2_data_config.json http://localhost:8083/connectors
 
+
 --to start JDBC enriched topic to postgres table
 curl -X POST -H "Content-Type: application/json" --data @jdbc_sink_data_2_dept_new.json http://localhost:8083/connectors
+
+--to start JDBC policies processed topic to postgres table
+curl -X POST -H "Content-Type: application/json" --data @sink/jdbc_sink_data_2_policy_new.json http://localhost:8083/connectors
+
+
+--to start elastic search policies processed topic to elastic search
+curl -X POST -H "Content-Type: application/json" --data @sink/es_sink_data_2_policy_new.json http://localhost:8083/connectors

@@ -6,6 +6,9 @@ curl -X DELETE http://localhost:8083/connectors/deparments-transfer-data-jdbc-so
 --to stop Spooler Dir connector
 curl -X DELETE http://localhost:8083/connectors/spooler-dir-csv-v1
 
+--to stop Debezium Postgres connector
+curl -X DELETE http://localhost:8083/connectors/conn_dbz_postgres_2_data_policy_update_v1
+
 
 ===================Sink Connectors===================
 
@@ -21,3 +24,10 @@ curl -X DELETE http://localhost:8083/connectors/es_con_dept_2_data_v1
 
 --to stop jdbc sink topic to postgres table
 curl -X DELETE http://localhost:8083/connectors/jdbc_sink_connector_data_2_dept_new_v1
+
+--to stop jdbc policy sink topic to postgres table
+curl -X DELETE http://localhost:8083/connectors/jdbc_sink_data_2_policy_new_v1
+
+
+--to stop elastic search policy processed topic to elastic search
+curl -X DELETE http://localhost:8083/connectors/es_sink_conn_data_2_policy_new_v1

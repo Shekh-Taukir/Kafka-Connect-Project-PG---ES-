@@ -130,3 +130,38 @@ curl -X PUT "http://192.168.0.10:9200/es_idx_dept_2_data?pretty" -H 'Content-Typ
     "number_of_replicas": 0
   }
 }'
+
+==============================================Updating policy streams
+
+--to collect raw data from debezium topic
+
+CREATE STREAM st_policy_raw_data (
+    BEFORE STRUCT<"tran_id" INT, "status" STRING, "policy_name" string, "created_at" string>,
+    AFTER STRUCT<"tran_id" INT, "status" STRING, "policy_name" string, "created_at" string>,
+    "op" string
+) WITH (
+    KAFKA_TOPIC = 'kt_dbz_policy_raw_data.public.policies_mst',
+    VALUE_FORMAT = 'JSON'
+);
+
+--to create stream for jdbc sink to insert / update the data]
+CREATE STREAM st_policy_proc_data 
+with(
+    VALUE_FORMAT='JSON_SR',
+    KAFKA_TOPIC='kt_dbz_policies_proc_json_sr'
+)
+AS
+    SELECT  
+        AFTER->"tran_id" as "tran_id",
+        AFTER->"status" as "status",
+        AFTER->"policy_name" as "policy_name",
+        AFTER->"created_at" as "created_at",
+        TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') as "processed_at",
+        "op" as "op_type"
+    FROM
+        st_policy_raw_data
+    WHERE
+        AFTER IS NOT NULL;
+
+--to see live changes in stream
+SELECT * FROM st_policy_proc_data EMIT CHANGES;

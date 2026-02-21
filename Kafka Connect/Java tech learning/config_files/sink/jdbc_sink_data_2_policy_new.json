@@ -1,0 +1,36 @@
+{
+    "name" : "jdbc_sink_data_2_policy_new_v1",
+    "config":{
+        "connector.class" : "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "task.max" : "1",
+		
+		"topics":"kt_dbz_policies_proc_json_sr",
+		
+		"connection.url": "jdbc:postgresql://192.168.0.4:5432/postgres",
+        "connection.user": "postgres",
+        "connection.password": "admin",
+        
+        "value.converter.schemas.enable" : "true",
+        "value.converter":"io.confluent.connect.json.JsonSchemaConverter",
+		"value.converter.schema.registry.url":"http://localhost:8081",
+        "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+		
+		"insert.mode" : "upsert",
+		"pk.mode": "record_value",
+		"pk.fields":"tran_id",
+
+		"table.name.format": "policies_mst_sink",
+		"auto.create":"false",
+		
+		"transforms":"cast",
+		"transforms.cast.type":"org.apache.kafka.connect.transforms.Cast$Value",
+		"transforms.cast.spec":"tran_id:int32",
+		
+		"_comment-transforms":"routeField,forceSchema",
+		"_comment-transforms.routeField.type":"org.apache.kafka.connect.transforms.ReplaceField$Value",
+		"_comment-transforms.routeField.renames":"DEPARTMENT_ID:dept_id,DEPARTMENT_NAME:dept_name,CHANGED_DATE:changed_at,NEW_COLUMN1:col1,NEW_COLUMN2:col2,COMPANY_NAME:company,PROCESSED_AT:processed_at",
+		
+		"transforms.forceSchema.type":"org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+		"transforms.forceSchema.schema.name":"my.schema.DepartmentRecord"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "name" : "conn_dbz_postgres_2_data_policy_update_v1",
+    "config":{
+        "connector.class" : "io.debezium.connector.postgresql.PostgresConnector",
+        "task.max" : "1",
+		
+		"database.hostname": "192.168.0.4",
+		"database.port": "5432",
+		"database.user": "postgres",
+		"database.password": "admin",
+		"database.dbname": "postgres",
+		
+		"topic.prefix": "kt_dbz_policy_raw_data",
+		"table.include.list": "public.policies_mst",
+		
+		"plugin.name" : "pgoutput",
+		"slot.name":"debezium_policy_slot",
+        
+        "value.converter.schemas.enable" : "false",
+        "key.converter.schemas.enable" : "false",
+        "value.converter":"org.apache.kafka.connect.json.JsonConverter",
+        "key.converter":"org.apache.kafka.connect.json.JsonConverter"
+    }
+}

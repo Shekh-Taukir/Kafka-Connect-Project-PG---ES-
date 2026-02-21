@@ -1,0 +1,12 @@
+--for debezium connector for postgres
+confluent-hub install debezium/debezium-connector-postgresql:latest
+
+--to work with debezium connector, postgres wal_level should be "logical"
+    > how to check the wal_level
+        > SHOW wal_level
+    > to change the wal level in postgres, need to change it from postgres.conf file, and how to get the path of that file
+        > SHOW config_file;
+        > then change 
+            > wal_level = logical
+    > have to check the existing user's permission for replication or logical
+        > SELECT rolname, rolreplication, rolsuper FROM pg_roles WHERE rolname = 'postgres';
