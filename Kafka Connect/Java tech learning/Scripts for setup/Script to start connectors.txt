@@ -31,3 +31,19 @@ curl -X POST -H "Content-Type: application/json" --data @sink/jdbc_sink_data_2_p
 
 --to start elastic search policies processed topic to elastic search
 curl -X POST -H "Content-Type: application/json" --data @sink/es_sink_data_2_policy_new.json http://localhost:8083/connectors
+
+
+==============================Event SINK Connectors
+
+--to start JDBC policies started events topic to postgres db table
+curl -X POST -H "Content-Type: application/json" --data @sink/jdbc_sink_policy_created_event_2_db_v1.json http://localhost:8083/connectors
+
+--to start JDBC policies lapsed events topic to postgres db table
+curl -X POST -H "Content-Type: application/json" --data @sink/jdbc_sink_policy_lapsed_event_2_db_v1.json http://localhost:8083/connectors
+
+--to start JDBC policies inforce events topic to postgres db table
+curl -X POST -H "Content-Type: application/json" --data @sink/jdbc_sink_policy_inforce_event_2_db_v1.json http://localhost:8083/connectors
+
+
+--to start elastic search efficient policies processed topic to elastic search
+curl -X POST -H "Content-Type: application/json" --data @sink/es_sink_data_2_proc_policy_v2.json http://localhost:8083/connectors

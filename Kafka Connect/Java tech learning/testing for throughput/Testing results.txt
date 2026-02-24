@@ -1,0 +1,22 @@
+Results for testing - insertion from Postgres -> Elastic search
+    - Topic : 1
+
+        - Rows : 20K rows
+        - Timings
+            > Time to insert into data
+                > Time taken : 2.3 seconds
+
+            > Time to reach data to Elastic search
+                - Total time for 20000 rows : 9.93 seconds
+                - Throughput : 2014.38 rows/sec
+        
+----------------------------------------------------------------------
+
+        - Rows : 100K rows
+        - Timings
+            > Time to insert into data
+                > Time taken : 14.81 seconds
+
+            > Time to reach data to Elastic search
+                - total time for 100000 rows : 37.88 seconds
+                - Throughput : 2639.69 rows/sec

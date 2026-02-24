@@ -1,0 +1,28 @@
+--upgrade the partitions from 1 to 2 in topic : debezium raw data topic
+kafka-topics --bootstrap-server localhost:9092 --alter --topic kt_dbz_policy_raw_data.public.policies_mst --partitions 2
+
+--upgrade the partitions from 1 to 2 in topic : debezium_policy processed topic
+kafka-topics --bootstrap-server localhost:9092 --alter --topic kt_dbz_policies_proc_json_sr --partitions 2
+
+
+--drop the processed queries first
+    --get the query id for that topic
+    > show queries; 
+        - get the query_id
+
+    --terminate the query
+    > terminate CSAS_ST_POLICY_PROC_DATA_11;
+
+
+--Drop the current working streams
+    --processed stream only
+    > drop stream ST_POLICY_PROC_DATA;
+
+--drop the schema registry:
+curl -X DELETE http://localhost:8081/subjects/kt_dbz_policies_proc_json_sr-value
+
+--create the proc stream with 2 partitions
+
+
+--can check the consumer groups via this command
+> kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group connect-es_sink_conn_data_2_policy_new_v1

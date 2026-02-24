@@ -133,6 +133,9 @@ curl -X PUT "http://192.168.0.10:9200/es_idx_dept_2_data?pretty" -H 'Content-Typ
 
 ==============================================Updating policy streams
 
+--to drop the schema registry file for stream
+curl -X DELETE http://localhost:8081/subjects/kt_dbz_policies_proc_json_sr-value
+
 --to collect raw data from debezium topic
 
 CREATE STREAM st_policy_raw_data (
@@ -141,13 +144,15 @@ CREATE STREAM st_policy_raw_data (
     "op" string
 ) WITH (
     KAFKA_TOPIC = 'kt_dbz_policy_raw_data.public.policies_mst',
-    VALUE_FORMAT = 'JSON'
+    VALUE_FORMAT = 'JSON',
+    PARTITIONS = 1
 );
 
 --to create stream for jdbc sink to insert / update the data]
 CREATE STREAM st_policy_proc_data 
 with(
     VALUE_FORMAT='JSON_SR',
+    PARTITIONS = 1,
     KAFKA_TOPIC='kt_dbz_policies_proc_json_sr'
 )
 AS
@@ -162,6 +167,88 @@ AS
         st_policy_raw_data
     WHERE
         AFTER IS NOT NULL;
+
+====================================Streams as per Events
+
+--Policy created
+CREATE STREAM st_evt_policy_created
+WITH (
+    KAFKA_TOPIC='topic_event_policy_created',
+    VALUE_FORMAT='JSON_SR',
+    PARTITIONS=1
+) AS
+SELECT 
+    AFTER->"tran_id" AS "policy_tran_id",
+    AFTER->"policy_name" AS "policy_name",
+    AFTER->"status" AS "status",
+    AFTER->"created_at" AS "created_at",
+    TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS "event_timestamp"
+FROM 
+    st_policy_raw_data
+WHERE 
+    "op" = 'c';
+
+
+-----Policy_lapsed
+CREATE STREAM st_evt_policy_lapsed
+WITH (
+    KAFKA_TOPIC='topic_event_policy_lapsed',
+    VALUE_FORMAT='JSON_SR',
+    PARTITIONS=1
+) AS
+SELECT 
+    AFTER->"tran_id" AS "policy_tran_id",
+    BEFORE->"status" AS "old_status",
+    AFTER->"status" AS "new_status",
+    TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS "lapse_timestamp"
+FROM 
+    st_policy_raw_data
+WHERE 
+    "op" = 'u'
+    AND LCASE(AFTER->"status") = 'lapse' 
+    AND LCASE(BEFORE->"status") = 'inforce';
+
+
+---------Policy Inforced
+CREATE STREAM st_event_policy_inforce
+WITH (
+    KAFKA_TOPIC='topic_event_policy_inforce',
+    VALUE_FORMAT='JSON_SR',
+    PARTITIONS=1
+) AS
+SELECT 
+    AFTER->"tran_id" AS "policy_tran_id",
+    BEFORE->"status" AS "old_status",
+    AFTER->"status" AS "new_status",
+    TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS "processed_at"
+FROM 
+    st_policy_raw_data
+WHERE 
+    LCASE(AFTER->"status") = 'inforce' 
+    AND (BEFORE->"status" IS NULL OR LCASE(BEFORE->"status") != 'inforce');
+
+
+====================================Upscale the system
+
+-----to update the stream work with 2 partitions
+CREATE STREAM st_policy_proc_data_eff_v2
+WITH (
+    VALUE_FORMAT='JSON_SR',
+    PARTITIONS = 2,
+    KAFKA_TOPIC='kt_dbz_data_2_procPolicy_eff'
+) AS
+    SELECT  
+        AS_VALUE(AFTER->"tran_id") AS "val_tran_id",
+        AFTER->"tran_id" AS "tran_id",
+        AFTER->"status" AS "status",
+        AFTER->"policy_name" AS "policy_name",
+        AFTER->"created_at" AS "created_at",
+        TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS "processed_at",
+        "op" AS "op_type"
+    FROM
+        st_policy_raw_data
+    PARTITION BY
+        AFTER->"tran_id";
 
 --to see live changes in stream
 SELECT * FROM st_policy_proc_data EMIT CHANGES;

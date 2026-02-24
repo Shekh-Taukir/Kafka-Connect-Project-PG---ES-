@@ -1,0 +1,48 @@
+--to get the old data in raw data topic for policies
+    - check the relreplident value for the table in postgres
+        select relreplident,* from pg_class where relname = 'policies_mst'
+
+    - query for reference, obtained from gemini
+        SELECT 
+            relname AS table_name, 
+            CASE relreplident
+                WHEN 'd' THEN 'default (primary key only)'
+                WHEN 'n' THEN 'nothing'
+                WHEN 'f' THEN 'full (all columns)'
+                WHEN 'i' THEN 'index'
+            END AS replica_identity
+        FROM pg_class
+        JOIN pg_namespace ON pg_namespace.oid = pg_class.relnamespace
+        WHERE relname = 'your_table_name'; -- Replace with your actual table name
+
+    - to update from default setting to full columns
+        alter table policies_mst REPLICA IDENTITY FULL;
+
+
+CREATE TABLE policy_created_events_mst (
+    tran_id SERIAL PRIMARY KEY,
+    policy_tran_id INT NOT NULL,
+    policy_name VARCHAR(255),
+    status VARCHAR(50),
+    created_at VARCHAR(100),
+    event_timestamp text
+);
+
+-- policy lapsed events table 
+CREATE TABLE policy_lapsed_events_mst (
+    tran_id SERIAL PRIMARY KEY,      
+    policy_tran_id INT NOT NULL,             
+    old_status VARCHAR(50),           
+    new_status VARCHAR(50),           
+    lapse_timestamp text
+);
+
+
+-- policy inforce events table 
+CREATE TABLE policy_inforce_events_mst (
+    tran_id SERIAL PRIMARY KEY,      
+    policy_tran_id INT NOT NULL,             
+    old_status VARCHAR(50),           
+    new_status VARCHAR(50),           
+    processed_at text
+);

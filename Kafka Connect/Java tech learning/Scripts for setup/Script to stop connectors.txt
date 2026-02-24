@@ -31,3 +31,21 @@ curl -X DELETE http://localhost:8083/connectors/jdbc_sink_data_2_policy_new_v1
 
 --to stop elastic search policy processed topic to elastic search
 curl -X DELETE http://localhost:8083/connectors/es_sink_conn_data_2_policy_new_v1
+
+
+==============================Event SINK Connectors
+
+--to stop JDBC sink policy created events topic to postgres DB
+curl -X DELETE http://localhost:8083/connectors/jdbcSinkPolicyCreatedEvent_2_event_v1
+
+
+--to stop JDBC sink policy lapsed events topic to postgres DB
+curl -X DELETE http://localhost:8083/connectors/jdbcSinkPolicyLapsedEvent_2_event_v1
+
+--to stop JDBC sink policy inforce events topic to postgres DB
+curl -X DELETE http://localhost:8083/connectors/jdbcSinkPolicyInforceEvent_2_event_v1
+
+
+
+--to stop elastic search efficient processed policy topic to elastic search
+curl -X DELETE http://localhost:8083/connectors/es_sinkCon_2_procPolicy_eff_v2
